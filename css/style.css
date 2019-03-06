@@ -24,11 +24,16 @@ html, body {
 }
 
 .symbPop {
-width:640px !important;
+    width:640px !important;
 }
 
 .btn {
 	margin-bottom: 2px;
+    width: 100%;
+}
+
+.btn-group {
+    width: 100%;
 }
 
 .btn:not(:hover) {

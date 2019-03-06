@@ -3,7 +3,7 @@
 // initiate map
 //
 
-var map = L.map('map', {zoomControl: false}).setView([45.4, -94.5], 8),
+var map = L.map('map', {zoomControl: false}).setView([45.0, -93.3], 8),
   layer = L.esri.basemapLayer("Gray").addTo(map);
   //layerLabels = L.esri.basemapLayer('GrayLabels').addTo(map);
   layerLabels = null;
@@ -54,7 +54,10 @@ var points = L.esri.featureLayer({
 			return L.marker(latlng, {
 				icon: point_icon
 			});
-		}
+		},
+        onEachFeature: function(feature, layer) {
+            layer.bindPopup(feature.properties.Name);
+        }
 	});
 
 var premises = L.esri.featureLayer({
@@ -125,6 +128,18 @@ $(document).ready(function(){
 	$("#selectStandardBasemap").on("change", function(e) {
 		setBasemap($(this).val());
   	});
+    
+    
+    $('#operating-btn').click(function () {
+			$('#operating-btn').toggleClass('btn-primary');
+			$('#operating-btn').toggleClass('btn-secondary');	
+		});
+	
+	$('#future-btn').click(function () {
+			$('#future-btn').toggleClass('btn-primary');
+			$('#future-btn').toggleClass('btn-secondary');
+		});
+    
 	
 	
 	// Search
