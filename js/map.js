@@ -2,6 +2,22 @@ $(document).ready(function(){
 	//
 	// initiate map
 	//
+	var xcel = null;
+
+	
+	function ajaxCallBack(retString){
+		xcel = retString;
+	}
+	
+	$.ajax({
+	dataType: "json",
+	url: "js/xcel.json",
+	success: function(data) {
+			ajaxCallBack(data);
+	}
+	}).error(function() { console.log('error')});
+	
+	
 
 	var map = L.map('map', {zoomControl: false}).setView([45.0, -93.3], 8),
 		layer = L.esri.basemapLayer("Gray").addTo(map);
@@ -124,7 +140,7 @@ $(document).ready(function(){
 
 
 
-
+setTimeout(function(){ console.log(xcel) }, 200);
 
 
 
