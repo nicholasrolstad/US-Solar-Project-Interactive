@@ -48,11 +48,11 @@
 			</a>
 			<ul class="dropdown-menu calcite-bgcolor-custom" style="background-color: rgb(253, 181, 43);">
 				<li><a role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>
-				<li><a role="menuitem" tabindex="0" data-target="#panelExplore" aria-haspopup="true"><span class="glyphicon glyphicon-list"></span> Explore Our Projects: Interactive Project Viewer</a></li>
-				<li><a role="menuitem" tabindex="0" data-target="#panelHistory" aria-haspopup="true"><span class="glyphicon glyphicon-time"></span> History of US Solar: An Interactive Timeline</a></li>
-				<li><a role="menuitem" tabindex="0" data-target="#panelStats" aria-haspopup="true"><span class="glyphicon glyphicon-stats"></span> Solar Stat Viewer: Data Visualizations</a></li>
-				<li><a role="menuitem" tabindex="0" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
-				<li><a role="menuitem" data-target="#panelSearch1" aria-haspopup="true"><span class="glyphicon glyphicon-search"></span> Search</a></li>
+				<li><a role="menuitem" tabindex="1" data-target="#panelExplore" aria-haspopup="true"><span class="glyphicon glyphicon-map-marker"></span> Explore Our Projects</a></li>
+				<li><a role="menuitem" tabindex="2" data-target="#panelHistory" aria-haspopup="true"><span class="glyphicon glyphicon-time"></span> History of US Solar</a></li>
+				<li><a role="menuitem" tabindex="3" data-target="#panelStats" aria-haspopup="true"><span class="glyphicon glyphicon-stats"></span> Solar Stat Viewer</a></li>
+				<li><a role="menuitem" tabindex="4" data-target="#panelSearch" aria-haspopup="true"><span class="glyphicon glyphicon-usd"></span> Could You Be Saving $$$ ?</a></li>
+				<li><a role="menuitem" tabindex="5" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
 			</ul>
 		</div>
 		<!-- Title -->
@@ -124,14 +124,14 @@
 		<div id="panelExplore" class="panel collapse">
 			<div id="headingExplore" class="panel-heading" role="tab">
 				<div class="panel-title">
-					<a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseExplore" aria-expanded="true" aria-controls="collapseExplore"><span class="glyphicon glyphicon-list" aria-hidden="true"></span><span class="panel-label">Explore Our Projects</span></a> 
+					<a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseExplore" aria-expanded="true" aria-controls="collapseExplore"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span><span class="panel-label">Explore Our Projects</span></a> 
 					<a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelExplore"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
 				</div>
 			</div>
 			<div id="collapseExplore" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingExplore">
 				<div class="panel-body">
-					<button type="button" class="btn btn-primary" id="operating-btn">Projects - Operating</button>   
-					<button type="button" class="btn btn-primary" id="future-btn">Projects - Future</button>  
+					<button type="button" class="btn btn-info" id="operating-btn">Projects - Operating</button>   
+					<button type="button" class="btn btn-info" id="future-btn">Projects - Future</button>  
 				</div>
 			</div>
 		</div>
@@ -170,16 +170,22 @@
 
 		<!-- Search Panel -->
 
-		<div id="panelSearch1" class="panel collapse">
-			<div id="headingSearch1" class="panel-heading" role="tab">
+		<div id="panelSearch" class="panel collapse">
+			<div id="headingSearch" class="panel-heading" role="tab">
 				<div class="panel-title">
-					<a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseSearch1" aria-expanded="true" aria-controls="collapseSearch1"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span><span class="panel-label">Search 1</span></a> 
-					<a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelSearch1"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
+					<a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseSearch" aria-expanded="true" aria-controls="collapseSearch"><span class="glyphicon glyphicon-usd" aria-hidden="true"></span><span class="panel-label">Could You Be Saving $$$ ?</span></a> 
+					<a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelSearch"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>
 				</div>
 			</div>
-			<div id="collapseSearch1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSearch1">
-				<div class="panel-body">            
+			<div id="collapseSearch" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSearch">
+				<div class="panel-body">
+					<p>Could you be saving money by subscribing to a US Solar Project?  Enter your address below to find the projects closest to you and see if you're eligible to subscribe!</p>
 					<div class="calcite-navbar-search"><div id="geocode"></div></div>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
 					<br>
 					<br>
 					<br>
