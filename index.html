@@ -1,207 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <!-- Lock viewport to prevent scaling -->
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <meta name="description" content="Calcite Maps Demo - Esri-Leaflet">
-  <meta name="author" content="">
-  <link rel="icon" href="https://www.esri.com/favicon.ico">
-  <title>US Solar: Community Solar Garden Map</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- Lock viewport to prevent scaling -->
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+	<meta name="description" content="Calcite Maps Demo - Esri-Leaflet">
+	<meta name="author" content="">
+	<link rel="icon" href="https://www.esri.com/favicon.ico">
+	<title>US Solar: Community Solar Garden Map</title>
 
-  <!-- Calcite Maps Bootstrap -->
-  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.10.css">
+	<!-- Calcite Maps Bootstrap -->
+	<link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.10.css">
 
-  <!-- Calcite Maps -->
-  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-esri-leaflet.min-v0.10.css">
-  <link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/fonts/calcite/calcite-ui.css">
+	<!-- Calcite Maps -->
+	<link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-esri-leaflet.min-v0.10.css">
+	<link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/fonts/calcite/calcite-ui.css">
 
-  <!-- Load Leaflet from CDN-->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-  <link rel="stylesheet" href="css/style.css" />
-  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js"></script>
+	<!-- Load Leaflet from CDN-->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js"></script>
 
-  <!-- Load Esri Leaflet from CDN -->
-  <script src="https://unpkg.com/esri-leaflet@2.0.7"></script>
-  
-  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<!-- Load Esri Leaflet from CDN -->
+	<script src="https://unpkg.com/esri-leaflet@2.0.7"></script>
 
-  <!-- Load Esri Leaflet Geocoder from CDN -->
-  <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.3/dist/esri-leaflet-geocoder.css">
-  <script src="https://unpkg.com/esri-leaflet-geocoder@2.2.3"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-
-
+	<!-- Load Esri Leaflet Geocoder from CDN -->
+	<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.3/dist/esri-leaflet-geocoder.css">
+	<script src="https://unpkg.com/esri-leaflet-geocoder@2.2.3"></script>
 </head>
 <body class="calcite-maps calcite-nav-top calcite-layout-small-title">
 
-  <!-- Navbar -->
+	<!-- Navbar -->
+	<nav class="navbar calcite-navbar navbar-fixed-top calcite-bg-dark calcite-text-light calcite-bgcolor-custom" style="background-color: rgb(253, 181, 43);">
+		<!-- Menu -->
+		<div class="dropdown calcite-dropdown calcite-bg-custom calcite-text-light" role="presentation">
+			<a class="dropdown-toggle" role="menubutton" aria-haspopup="true" aria-expanded="false" tabindex="0">
+				<div class="calcite-dropdown-toggle">
+					<span class="sr-only">Toggle dropdown menu</span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+			</a>
+			<ul class="dropdown-menu calcite-bgcolor-custom" style="background-color: rgb(253, 181, 43);">
+				<li><a role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>
+				<li><a role="menuitem" tabindex="0" data-target="#panelExplore" aria-haspopup="true"><span class="glyphicon glyphicon-list"></span> Explore Our Projects: Interactive Project Viewer</a></li>
+				<li><a role="menuitem" tabindex="0" data-target="#panelHistory" aria-haspopup="true"><span class="glyphicon glyphicon-time"></span> History of US Solar: An Interactive Timeline</a></li>
+				<li><a role="menuitem" tabindex="0" data-target="#panelStats" aria-haspopup="true"><span class="glyphicon glyphicon-stats"></span> Solar Stat Viewer: Data Visualizations</a></li>
+				<li><a role="menuitem" tabindex="0" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
+				<li><a role="menuitem" data-target="#panelSearch1" aria-haspopup="true"><span class="glyphicon glyphicon-search"></span> Search</a></li>
+			</ul>
+		</div>
+		<!-- Title -->
+		<div class="calcite-title calcite-overflow-hidden">
+			<span class="calcite-title-main">Minnesota Community Solar Gardens</span>
+			<span class="calcite-title-divider hidden-xs"></span>
+			<span class="calcite-title-sub hidden-xs">US Solar</span> 
+		</div>
+	</nav><!--/.navbar -->
 
-  <nav class="navbar calcite-navbar navbar-fixed-top calcite-bg-dark calcite-text-light calcite-bgcolor-orange">
-     <!-- Menu -->
-    <div class="dropdown calcite-dropdown calcite-bg-custom calcite-text-light" role="presentation">
-      <a class="dropdown-toggle" role="menubutton" aria-haspopup="true" aria-expanded="false" tabindex="0">
-        <div class="calcite-dropdown-toggle">
-          <span class="sr-only">Toggle dropdown menu</span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </a>
-      <ul class="dropdown-menu calcite-bgcolor-orange">
-        <li><a role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>
-        <li><a role="menuitem" tabindex="0" data-target="#panelExplore" aria-haspopup="true"><span class="glyphicon glyphicon-list"></span> Explore Our Projects: Interactive Project Viewer</a></li>
-        <li><a role="menuitem" tabindex="0" data-target="#panelHistory" aria-haspopup="true"><span class="glyphicon glyphicon-time"></span> History of US Solar: An Interactive Timeline</a></li>
-        <li><a role="menuitem" tabindex="0" data-target="#panelStats" aria-haspopup="true"><span class="glyphicon glyphicon-stats"></span> Solar Stat Viewer: Data Visualizations</a></li>
-        <li><a role="menuitem" tabindex="0" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
-        <li><a class="visible-xs" role="button" data-target="#panelSearch" aria-haspopup="true"><span class="glyphicon glyphicon-search"></span> Search</a></li>
-      </ul>
-    </div>
-    <!-- Title -->
-    <div class="calcite-title calcite-overflow-hidden">
-      <span class="calcite-title-main">Minnesota Community Solar Gardens</span>
-      <span class="calcite-title-divider hidden-xs"></span>
-      <span class="calcite-title-sub hidden-xs">US Solar</span> 
-    </div>
-     <!-- Nav -->
-    <ul class="calcite-nav nav navbar-nav">                    
-      <li><div class="calcite-navbar-search hidden-xs"><div id="geocode"></div></div></li>
-    </ul>
-  </nav><!--/.navbar -->
+	<!-- Map Container  -->
 
-  <!-- Map Container  -->
+	<div class="calcite-map">                
+		<div id="map" class="calcite-map-absolute"><script src="js/map.js"></script></div>    
+	</div><!-- /.container -->
 
-  <div class="calcite-map">                
-    <div id="map" class="calcite-map-absolute"><script src="js/map.js"></script></div>    
-  </div><!-- /.container -->
+	<!-- Panel -->
 
-  <!-- Panel -->
+	<div class="calcite-panels calcite-panels-left calcite-bg-custom calcite-text-light panel-group calcite-bgcolor-custom" style="background-color: rgb(253, 181, 43);" role="tablist" aria-multiselectable="true">
 
-  <div class="calcite-panels calcite-panels-left calcite-bg-custom calcite-text-light panel-group calcite-bgcolor-orange" role="tablist" aria-multiselectable="true">
-  
-    <!-- Info Panel -->
+		<!-- Info Panel -->
 
-    <div id="panelInfo" class="panel collapse">
-      <div id="headingInfo" class="panel-heading" role="tab">
-        <div class="panel-title">
-          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo" aria-expanded="true" aria-controls="collapseInfo"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="panel-label">Info</span></a> 
-          <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelInfo"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
-        </div>
-      </div>
-      <div id="collapseInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingInfo">
-        <div class="panel-body">            
-          <p>Thanks for checking out US Solar's Minnesota Community Solar Garden Map. Here's what each of the available menu items will let you explore: </p>
-          Explore our Projects: Interactive Project Viewer
-          <li>Currently operating community solar gardens</li>
-          <li>Future community solar gardens</li>
-          <br>
-          History of US Solar: An Interactive Timeline
-          <li>A map-based history of US Solar</li>
-          <br>
-          Statistical Visualization:
-          <li>Subscribers</li>
-          <li>Fossil Fuels Replaced by a Project</li>
-        </div>
-      </div>
-    </div>
-    
-        <!-- Search Panel -->
-
-    <div id="panelSearch" class="panel collapse hidden-sm hidden-md hidden-lg"> 
-      <div id="headingSearch" class="panel-heading" role="tab">
-        <div class="panel-title">
-          <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseSearch"  aria-expanded="false" aria-controls="collapseSearch"><span class="glyphicon glyphicon-search" aria-hidden="true"></span><span class="panel-label">Search</span></a> 
-          <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelSearch"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>        
-        </div>
-      </div>
-      <div id="collapseSearch" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSearch">
-        <div class="panel-body calcite-body-expander">    
-            <div id="geocodeMobile"></div>
-        </div>
-      </div>
-    </div>
+		<div id="panelInfo" class="panel collapse">
+			<div id="headingInfo" class="panel-heading" role="tab">
+				<div class="panel-title">
+					<a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseInfo" aria-expanded="true" aria-controls="collapseInfo"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span><span class="panel-label">Info</span></a> 
+					<a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelInfo"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
+				</div>
+			</div>
+			<div id="collapseInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingInfo">
+				<div class="panel-body">            
+					<p>Thanks for checking out US Solar's Minnesota Community Solar Garden Map. Here's what each of the available menu items will let you explore: </p>
+					Explore our Projects: Interactive Project Viewer
+					<li>Currently operating community solar gardens</li>
+					<li>Future community solar gardens</li>
+					<br>
+					History of US Solar: An Interactive Timeline
+					<li>A map-based history of US Solar</li>
+					<br>
+					Statistical Visualization:
+					<li>Subscribers</li>
+					<li>Fossil Fuels Replaced by a Project</li>
+				</div>
+			</div>
+		</div>
 
 
-    <!-- Basemaps Panel -->
+		<!-- Basemaps Panel -->
 
-    <div id="panelBasemaps" class="panel collapse">
-      <div id="headingBasemaps" class="panel-heading" role="tab">
-        <div class="panel-title">
-          <a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseBasemaps" aria-expanded="false"   aria-controls="collapseBasemaps"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span><span class="panel-label">Basemaps</span></a> 
-          <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelBasemaps"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
-        </div>
-      </div>
-      <div id="collapseBasemaps" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBasemaps">
-        <div class="panel-body">
-          <select id="selectStandardBasemap" class="form-control">
-            <option value="Gray">Basic</option>
-            <option value="NationalGeographic">Streets</option>
-            <option value="Imagery">Satellite</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Explore Panel -->
-    <div id="panelExplore" class="panel collapse">
-      <div id="headingExplore" class="panel-heading" role="tab">
-        <div class="panel-title">
-          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseExplore" aria-expanded="true" aria-controls="collapseExplore"><span class="glyphicon glyphicon-list" aria-hidden="true"></span><span class="panel-label">Explore Our Projects</span></a> 
-          <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelExplore"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
-        </div>
-      </div>
-      <div id="collapseExplore" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingExplore">
-        <div class="panel-body">
-            <button type="button" class="btn btn-primary" id="operating-btn">Projects - Operating</button>   
-            <button type="button" class="btn btn-primary" id="future-btn">Projects - Future</button>  
-        </div>
-      </div>
-    </div>
-      
-    <!-- History Panel -->
+		<div id="panelBasemaps" class="panel collapse">
+			<div id="headingBasemaps" class="panel-heading" role="tab">
+				<div class="panel-title">
+					<a class="panel-toggle collapsed" role="button" data-toggle="collapse" href="#collapseBasemaps" aria-expanded="false"   aria-controls="collapseBasemaps"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span><span class="panel-label">Basemaps</span></a> 
+					<a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelBasemaps"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
+				</div>
+			</div>
+			<div id="collapseBasemaps" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingBasemaps">
+				<div class="panel-body">
+					<select id="selectStandardBasemap" class="form-control">
+						<option value="Gray">Basic</option>
+						<option value="NationalGeographic">Streets</option>
+						<option value="Imagery">Satellite</option>
+					</select>
+				</div>
+			</div>
+		</div>
 
-    <div id="panelHistory" class="panel collapse">
-      <div id="headingHistory" class="panel-heading" role="tab">
-        <div class="panel-title">
-          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseHistory" aria-expanded="true" aria-controls="collapseHistory"><span class="glyphicon glyphicon-time" aria-hidden="true"></span><span class="panel-label">History of US Solar</span></a> 
-          <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelHistory"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
-        </div>
-      </div>
-      <div id="collapseHistory" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingHistory">
-        <div class="panel-body">            
-          <p>History of US Solar Placeholder</p>
-        </div>
-      </div>
-    </div>
-      
-    <!-- Stats Panel -->
+		<!-- Explore Panel -->
+		<div id="panelExplore" class="panel collapse">
+			<div id="headingExplore" class="panel-heading" role="tab">
+				<div class="panel-title">
+					<a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseExplore" aria-expanded="true" aria-controls="collapseExplore"><span class="glyphicon glyphicon-list" aria-hidden="true"></span><span class="panel-label">Explore Our Projects</span></a> 
+					<a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelExplore"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
+				</div>
+			</div>
+			<div id="collapseExplore" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingExplore">
+				<div class="panel-body">
+					<button type="button" class="btn btn-primary" id="operating-btn">Projects - Operating</button>   
+					<button type="button" class="btn btn-primary" id="future-btn">Projects - Future</button>  
+				</div>
+			</div>
+		</div>
 
-    <div id="panelStats" class="panel collapse">
-      <div id="headingStats" class="panel-heading" role="tab">
-        <div class="panel-title">
-          <a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseStats" aria-expanded="true" aria-controls="collapseStats"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span><span class="panel-label">Solar Stat Viewer</span></a> 
-          <a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelStats"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
-        </div>
-      </div>
-      <div id="collapseStats" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingStats">
-        <div class="panel-body">            
-          <p>Solar Stat Viewer Placeholder</p>
-        </div>
-      </div>
-    </div>
-    
-  </div> <!-- /.calcite-panels -->
-  
+		<!-- History Panel -->
 
-  <!-- Include all plugins or individual files as needed -->
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<div id="panelHistory" class="panel collapse">
+			<div id="headingHistory" class="panel-heading" role="tab">
+				<div class="panel-title">
+					<a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseHistory" aria-expanded="true" aria-controls="collapseHistory"><span class="glyphicon glyphicon-time" aria-hidden="true"></span><span class="panel-label">History of US Solar</span></a> 
+					<a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelHistory"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
+				</div>
+			</div>
+			<div id="collapseHistory" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingHistory">
+				<div class="panel-body">            
+					<p>History of US Solar Placeholder</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Stats Panel -->
+
+		<div id="panelStats" class="panel collapse">
+			<div id="headingStats" class="panel-heading" role="tab">
+				<div class="panel-title">
+					<a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseStats" aria-expanded="true" aria-controls="collapseStats"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span><span class="panel-label">Solar Stat Viewer</span></a> 
+					<a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelStats"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
+				</div>
+			</div>
+			<div id="collapseStats" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingStats">
+				<div class="panel-body">
+					<p>Solar Stat Viewer Placeholder</p>
+				</div>
+			</div>
+		</div>
+
+		<!-- Search Panel -->
+
+		<div id="panelSearch1" class="panel collapse">
+			<div id="headingSearch1" class="panel-heading" role="tab">
+				<div class="panel-title">
+					<a class="panel-toggle" role="button" data-toggle="collapse" href="#collapseSearch1" aria-expanded="true" aria-controls="collapseSearch1"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span><span class="panel-label">Search 1</span></a> 
+					<a class="panel-close" role="button" data-toggle="collapse" tabindex="0" href="#panelSearch1"><span class="esri-icon esri-icon-close" aria-hidden="true"></span></a>  
+				</div>
+			</div>
+			<div id="collapseSearch1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSearch1">
+				<div class="panel-body">            
+					<div class="calcite-navbar-search"><div id="geocode"></div></div>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+					<br>
+				</div>
+			</div>
+		</div>
+
+	</div> <!-- /.calcite-panels -->
 
 
-
-  <script src="https://esri.github.io/calcite-maps/dist/js/jquery/calcitemaps-v0.10.js"></script>
+	<!-- Include all plugins or individual files as needed -->
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://esri.github.io/calcite-maps/dist/js/jquery/calcitemaps-v0.10.js"></script>
 
 </body>
 </html>
