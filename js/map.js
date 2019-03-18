@@ -5,15 +5,27 @@ $(document).ready(function(){
 	var xcel = null;
 
 	
-	function ajaxCallBack(retString){
+	function ajaxCallBackXcel(retString){
 		xcel = retString;
+	}
+	
+	function ajaxCallBackCo(retString){
+		mn_counties = retString;
 	}
 	
 	$.ajax({
 	dataType: "json",
 	url: "js/xcel.json",
 	success: function(data) {
-			ajaxCallBack(data);
+			ajaxCallBackXcel(data);
+	}
+	}).error(function() { console.log('error')});
+	
+		$.ajax({
+	dataType: "json",
+	url: "js/mn_counties.json",
+	success: function(data) {
+			ajaxCallBackCo(data);
 	}
 	}).error(function() { console.log('error')});
 	
@@ -81,7 +93,10 @@ $(document).ready(function(){
 			style: {
 				weight: 1,
 				color: 'orange'
-			}
+			},
+					onEachFeature: function(feature, layer) {
+							layer.bindPopup(feature.properties.Name);
+					}
 		});
 
 
@@ -125,7 +140,7 @@ $(document).ready(function(){
 
 
 			//var searchControl = L.esri.Geocoding.Controls.geosearch({expanded: true, collapseAfterResult: false, zoomToResult: false}).addTo(map);
-			var searchControl = L.esri.Geocoding.geosearch({expanded: true, collapseAfterResult: false, zoomToResult: false}).addTo(map);
+			var searchControl = L.esri.Geocoding.geosearch({expanded: true, collapseAfterResult: true, zoomToResult: true}).addTo(map);
 
 			searchControl.on('results', function(data){ 
 				if (data.results.length > 0) {
@@ -134,13 +149,30 @@ $(document).ready(function(){
 						.setContent(data.results[0].text)
 						.openOn(map);
 					map.setView(data.results[0].latlng)
-			console.log(data.results[0].latlng)
+					var point = turf.point([data.results[0].latlng.lng, data.results[0].latlng.lat]);
+					var isEligible = false;
+					for (let idx in xcel.features) {
+						if (turf.booleanPointInPolygon(point, xcel.features[idx]) === true) {
+							var isEligible = true;
+						}
+					}
+					if (isEligible === true) {
+						for (let idx in mn_counties.features) {
+							if (turf.booleanPointInPolygon(point, mn_counties.features[idx]) === true) {
+								console.log(mn_counties.features[idx].properties.CTY_NAME);
+								var buffered = turf.buffer(mn_counties.features[idx], 500, {units: 'feet'});
+								for (let idx in mn_counties.features) {
+									if (turf.booleanDisjoint(buffered, mn_counties.features[idx]) === false) {
+										console.log(mn_counties.features[idx].properties.CTY_NAME);
+									}
+								}
+							}
+						}
+					}
 				}
 			});
 
 
-
-setTimeout(function(){ console.log(xcel) }, 200);
 
 
 
@@ -150,11 +182,11 @@ setTimeout(function(){ console.log(xcel) }, 200);
 
 
 		$("#selectStandardBasemap").on("change", function(e) {
-			setBasemap($(this).val());
+				setBasemap($(this).val());
 			});
 
 
-			$('#operating-btn').click(function () {
+		$('#operating-btn').click(function () {
 				$('#operating-btn').toggleClass('btn-info');
 				$('#operating-btn').toggleClass('btn-secondary');	
 			});
@@ -163,6 +195,7 @@ setTimeout(function(){ console.log(xcel) }, 200);
 				$('#future-btn').toggleClass('btn-info');
 				$('#future-btn').toggleClass('btn-secondary');
 			});
+
 
 
 
