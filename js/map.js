@@ -3,7 +3,13 @@ $(document).ready(function(){
 	// initiate map
 	//
 	var xcel = null;
-
+	var loading_animation = "<div class=\"lds-spinner\"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>"
+	
+	$.fn.redraw = function(){
+  $(this).each(function(){
+    var redraw = this.offsetHeight;
+  });
+};
 	
 	function ajaxCallBackXcel(retString){
 		xcel = retString;
@@ -140,23 +146,23 @@ $(document).ready(function(){
 
 
 			//var searchControl = L.esri.Geocoding.Controls.geosearch({expanded: true, collapseAfterResult: false, zoomToResult: false}).addTo(map);
-			var searchControl = L.esri.Geocoding.geosearch({expanded: true, collapseAfterResult: true, zoomToResult: true}).addTo(map);
+			var searchControl = L.esri.Geocoding.geosearch({expanded: true, collapseAfterResult: true, zoomToResult: true, useMapBounds:false, placeholder:'Enter your address here...' }).addTo(map);
 
 			searchControl.on('results', function(data){ 
-				if (data.results.length > 0) {
-					var popup = L.popup()
-						.setLatLng(data.results[0].latlng)
-						.setContent(data.results[0].text)
-						.openOn(map);
-					map.setView(data.results[0].latlng)
+				$("#loading").addClass('loadingOn');
+				$("#loading").append(loading_animation);
+				setTimeout(function() {
+					if (data.results.length > 0) {
 					var point = turf.point([data.results[0].latlng.lng, data.results[0].latlng.lat]);
 					var isEligible = false;
+					var result = 'Not Eligible';
 					for (let idx in xcel.features) {
 						if (turf.booleanPointInPolygon(point, xcel.features[idx]) === true) {
 							var isEligible = true;
 						}
 					}
 					if (isEligible === true) {
+						var result = 'Eligible';
 						for (let idx in mn_counties.features) {
 							if (turf.booleanPointInPolygon(point, mn_counties.features[idx]) === true) {
 								console.log(mn_counties.features[idx].properties.CTY_NAME);
@@ -169,7 +175,15 @@ $(document).ready(function(){
 							}
 						}
 					}
+					var popup = L.popup()
+						.setLatLng(data.results[0].latlng)
+						.setContent(data.results[0].text + '<BR><BR><BR>' + result)
+						.openOn(map);
+					map.setView(data.results[0].latlng)
 				}
+				$("#loading").removeClass('loadingOn');
+				$("#loading").empty();
+				}, 0);
 			});
 
 
