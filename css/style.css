@@ -23,9 +23,39 @@ html, body {
   border: none;
 }
 
-.symbPop {
-    width:640px !important;
+/*-- style custom leaflet popups --*/
+.leaflet-popup-content-wrapper {
+	padding: 10px;
+	text-align: center;
+	background-color: #6D6E72;
+	opacity: 1;
 }
+
+.leaflet-popup-content {
+	color: #f6f6f4;
+	text-align: left;
+}
+
+
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+	margin: -10px auto 0;
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	transform: rotate(45deg);
+	background-color:#6D6E72;
+}
+
+
+
+
+
+
+
 
 .btn {
 	margin-bottom: 2px;
@@ -41,19 +71,31 @@ html, body {
 }
 
 .loadingOn {
+	visibility: visible;
+	opacity: 1;
+	transition: opacity .3s linear;
+}
+
+#loading {
 	width: 100%;
 	height: 100%;
-	background-color: #444;
+	background-color: rgb(253, 181, 43);
 	position: absolute;
 	z-index: 999;
 	padding:0;
+}
+
+.loadingHidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s .3s, opacity .3s linear;
 }
 
 .lds-spinner {
   color: white;
   display: inline-block;
   position: absolute;
-	top: 80px;
+	top: 45%;
 	left: -32px;
 	margin-left: 50%;
   width: 64px;
