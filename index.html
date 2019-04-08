@@ -7,11 +7,12 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 	<meta name="description" content="Calcite Maps Demo - Esri-Leaflet">
 	<meta name="author" content="">
-	<link rel="icon" href="https://www.esri.com/favicon.ico">
+	<link rel="icon" href="favicon.ico">
 	<title>US Solar: Community Solar Garden Map</title>
 
 	<!-- Calcite Maps Bootstrap -->
 	<link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-bootstrap.min-v0.10.css">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,600" rel="stylesheet">
 
 	<!-- Calcite Maps -->
 	<link rel="stylesheet" href="https://esri.github.io/calcite-maps/dist/css/calcite-maps-esri-leaflet.min-v0.10.css">
@@ -34,7 +35,7 @@
 <body class="calcite-maps calcite-nav-top calcite-layout-small-title">
 
 	<!-- Navbar -->
-	<nav class="navbar calcite-navbar navbar-fixed-top calcite-bg-dark calcite-text-light calcite-bgcolor-custom" style="background-color: rgb(253, 181, 43);">
+	<nav class="navbar calcite-navbar navbar-fixed-top calcite-bg-dark calcite-text-dark calcite-bgcolor-white" style="border-bottom: solid medium rgb(245, 149, 28);">
 		<!-- Menu -->
 		<div class="dropdown calcite-dropdown calcite-bg-custom calcite-text-light" role="presentation">
 			<a class="dropdown-toggle" role="menubutton" aria-haspopup="true" aria-expanded="false" tabindex="0">
@@ -46,20 +47,18 @@
 					<span></span>
 				</div>
 			</a>
-			<ul class="dropdown-menu calcite-bgcolor-custom" style="background-color: rgb(253, 181, 43);">
+			<ul class="dropdown-menu calcite-bgcolor-custom" style="background-color: rgb(245, 149, 28);">
 				<li><a role="menuitem" tabindex="0" data-target="#panelInfo" aria-haspopup="true"><span class="glyphicon glyphicon-info-sign"></span> Info</a></li>
 				<li><a role="menuitem" tabindex="1" data-target="#panelExplore" aria-haspopup="true"><span class="glyphicon glyphicon-map-marker"></span> Explore Our Projects</a></li>
-				<li><a role="menuitem" tabindex="2" data-target="#panelHistory" aria-haspopup="true"><span class="glyphicon glyphicon-time"></span> History of US Solar</a></li>
-				<li><a role="menuitem" tabindex="3" data-target="#panelStats" aria-haspopup="true"><span class="glyphicon glyphicon-stats"></span> Solar Stat Viewer</a></li>
 				<li><a role="menuitem" tabindex="4" data-target="#panelSearch" aria-haspopup="true"><span class="glyphicon glyphicon-usd"></span> Could You Be Saving $$$ ?</a></li>
 				<li><a role="menuitem" tabindex="5" data-target="#panelBasemaps" aria-haspopup="true"><span class="glyphicon glyphicon-th-large"></span> Basemaps</a></li>
 			</ul>
 		</div>
 		<!-- Title -->
 		<div class="calcite-title calcite-overflow-hidden">
-			<span class="calcite-title-main">Minnesota Community Solar Gardens</span>
+			<span class="calcite-title-main"><a href="https://www.us-solar.com/"><img src="img/us-solar.png"  alt="us-solar" height="30" width="110"></a></span>
 			<span class="calcite-title-divider hidden-xs"></span>
-			<span class="calcite-title-sub hidden-xs">US Solar</span> 
+			<span class="calcite-title-sub hidden-xs">MINNESOTA COMMUNITY SOLAR GARDENS</span> 
 		</div>
 	</nav><!--/.navbar -->
 
@@ -73,7 +72,7 @@
 
 	<!-- Panel -->
 
-	<div class="calcite-panels calcite-panels-left calcite-bg-custom calcite-text-light panel-group calcite-bgcolor-custom" style="background-color: rgb(253, 181, 43);" role="tablist" aria-multiselectable="true">
+	<div class="calcite-panels calcite-panels-left calcite-bg-custom calcite-text-light panel-group calcite-bgcolor-custom" style="background-color: rgb(245, 149, 28);" role="tablist" aria-multiselectable="true">
 
 		<!-- Info Panel -->
 
@@ -86,17 +85,15 @@
 			</div>
 			<div id="collapseInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingInfo">
 				<div class="panel-body">
-					<p>Thanks for checking out US Solar's Minnesota Community Solar Garden Map. Here's what each of the available menu items will let you explore: </p>
-					Explore our Projects: Interactive Project Viewer
-					<li>Currently operating community solar gardens</li>
-					<li>Future community solar gardens</li>
+					<p>Interested in <span style="color:rgb(245, 149, 28);"><a href="https://www.us-solar.com/mn.html" target="_blank">Community Solar</a></span>? Take a look at our projects and learn if you're eligible to start saving money. Here's what each of the available menu items will let you explore: </p>
+					<span style="font-weight: 600">Explore our Projects:</span>
+					<li>Check out a map of all our operating and in construction projects. </li>
 					<br>
-					History of US Solar: An Interactive Timeline
-					<li>A map-based history of US Solar</li>
+					<span style="font-weight: 600">Could You Be Saving $$$ ?:</span>
+					<li>Enter your address and see if you qualify to save money on your Xcel Energy bill by subscribing to one of our Community Solar Gardens!</li>
 					<br>
-					Statistical Visualization:
-					<li>Subscribers</li>
-					<li>Fossil Fuels Replaced by a Project</li>
+					<br>
+					<span style="font-weight: 600; color:rgb(245, 149, 28);"><a href="https://www.us-solar.com/contact.html" target="_blank">Contact US Solar</a></span>
 				</div>
 			</div>
 		</div>
@@ -132,8 +129,8 @@
 			</div>
 			<div id="collapseExplore" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingExplore">
 				<div class="panel-body">
-					<button type="button" class="btn btn-info" id="operating-btn">Projects - Operating</button>   
-					<button type="button" class="btn btn-info" id="future-btn">Projects - Future</button>  
+					<button type="button" class="btn btn-info" id="operating-btn">Operational</button>   
+					<button type="button" class="btn btn-info" id="future-btn">In Construction</button>  
 				</div>
 			</div>
 		</div>

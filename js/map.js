@@ -14,6 +14,8 @@ function ajaxCallBackCo(retString){
 	mn_counties = retString; //mn counties json
 }
 
+	
+	
 // load geojson layers
 $.ajax({
 dataType: "json",
@@ -25,7 +27,7 @@ success: function(data) {
 
 $.ajax({
 dataType: "json",
-url: "js/mn_counties.json",
+url: "js/mn_counties_ltd.json",
 success: function(data) {
 		ajaxCallBackCo(data);
 }
@@ -33,7 +35,7 @@ success: function(data) {
 
 
 
-var map = L.map('map', {zoomControl: false}).setView([45.0, -93.3], 8),
+var map = L.map('map', {zoomControl: false}).setView([45.03, -93.3], 9),
 	layer = L.esri.basemapLayer("Gray").addTo(map);
 	//layerLabels = L.esri.basemapLayer('GrayLabels').addTo(map);
 	layerLabels = null;
@@ -67,19 +69,32 @@ L.control.zoom({
 // style functions
 //
 
-
-
 //
 // feature layers
 //
 
 var point_icon = L.icon({
-	iconUrl: 'img/icon1.svg',
+	iconUrl: 'img/icon.svg',
+	iconSize: [30,30]
+})
+
+var point_icon_grey = L.icon({
+	iconUrl: 'img/icon-greyed.svg',
 	iconSize: [30,30]
 })
 
 var points = L.esri.featureLayer({
-		url: 'https://services9.arcgis.com/YEQ7YfprtcM3j3JL/arcgis/rest/services/solar_projects_view/FeatureServer/0',
+		url: 'https://services9.arcgis.com/YEQ7YfprtcM3j3JL/arcgis/rest/services/projects_view/FeatureServer/0',
+		pointToLayer: function (geojson, latlng) {
+			return L.marker(latlng, {
+				icon: point_icon
+			});
+		},
+	});
+
+var points_operating = L.esri.featureLayer({
+		where: "operating_status = 1",
+		url: 'https://services9.arcgis.com/YEQ7YfprtcM3j3JL/arcgis/rest/services/projects_view/FeatureServer/0',
 		pointToLayer: function (geojson, latlng) {
 			return L.marker(latlng, {
 				icon: point_icon
@@ -87,49 +102,49 @@ var points = L.esri.featureLayer({
 		},
 				onEachFeature: function(feature, layer) {
 						layer.bindPopup(feature.properties.name);
+						if (feature.properties.operating_status == 1) {
+							imageLink = "img/" + feature.properties.name.toLowerCase().replace(/ /g, "").replace("solar", "").replace(".", "").replace("uss", "") + ".jpg"
+        			layer.bindPopup("<span class=\"popup-title\">" + feature.properties.name + "</span>" + "<br><br><img src=" + imageLink + ">", {minWidth: 300});
+						} else {
+							layer.bindPopup(feature.properties.name);
+						}
 				}
 	});
-
-
-var premises = L.esri.featureLayer({
-		url: 'https://services9.arcgis.com/YEQ7YfprtcM3j3JL/arcgis/rest/services/solar_projects_view/FeatureServer/1',
-		style: {
-			weight: 1,
-			color: 'orange'
+	
+var points_future = L.esri.featureLayer({
+		where: "operating_status = 0",
+		url: 'https://services9.arcgis.com/YEQ7YfprtcM3j3JL/arcgis/rest/services/projects_view/FeatureServer/0',
+		pointToLayer: function (geojson, latlng) {
+			return L.marker(latlng, {
+				icon: point_icon
+			});
 		},
 				onEachFeature: function(feature, layer) {
 						layer.bindPopup(feature.properties.name);
+						if (feature.properties.operating_status == 0) {
+							imageLink = "img/" + feature.properties.name.toLowerCase().replace(/ /g, "").replace("solar", "").replace(".", "").replace("uss", "") + ".jpg"
+        			layer.bindPopup("<span class=\"popup-title\">" + feature.properties.name + "</span>" + "<br><br><img src=" + imageLink + ">", {minWidth: 300});
+						} else {
+							layer.bindPopup(feature.properties.name);
+						}
 				}
 	});
-
-
+	
+var points_eligible;
+var operating_id = String(points_operating._leaflet_id)
+var future_id = String(points_future._leaflet_id)
+var results_id;
+var ids = [operating_id, future_id]
 
 //
 // initiate layers
 //
 
 points.addTo(map);
+map.removeLayer(points);
+points_operating.addTo(map);
+points_future.addTo(map);
 
-
-
-
-/*
-map.on('zoomend', function() {
-		if (map.getZoom() <15){
-		points.addTo(map);
-	} else {
-		map.removeLayer(points);
-	}
-});
-
-map.on('zoomend', function() {
-	if (map.getZoom() <15){
-		map.removeLayer(premises);
-	} else {
-		premises.addTo(map);
-	}
-});
-*/	
 
 map.on('mousedown', function(e) {
 	if ( $('#collapseBasemaps').hasClass("in")) {
@@ -137,6 +152,11 @@ map.on('mousedown', function(e) {
 	}
 });
 
+map.on('popupopen', function(e) {
+	var px = map.project(e.popup._latlng); // find the pixel location on the map where the popup anchor is
+	px.y -= e.popup._container.clientHeight/2 // find the height of the popup container, divide by 2, subtract from the Y axis of marker location
+	map.panTo(map.unproject(px),{animate: true}); // pan to new center
+});
 
 
 //var searchControl = L.esri.Geocoding.Controls.geosearch({expanded: true, collapseAfterResult: false, zoomToResult: false}).addTo(map);
@@ -146,70 +166,91 @@ searchControl.on('results', function(data){
 	$("#loading").removeClass('loadingHidden'); //set up loading animation
 	$("#loading").append(loading_animation);
 	$("#loading").addClass('loadingOn');
+	$('#operating-btn').removeClass('btn-info');
+	$('#operating-btn').addClass('btn-secondary');
+	$('#future-btn').removeClass('btn-info');
+	$('#future-btn').addClass('btn-secondary');
 
 	map.eachLayer(function (layer) {  //remove all layers and add basemap back.  This isn't ideal but map.hasLayer is behaving unexpectedly here.
   	map.removeLayer(layer);
 	});
 	L.esri.basemapLayer("Gray").addTo(map);
 	
-	
 	setTimeout(function() { //run in timeout function to allow loading screen
 		if (data.results.length > 0) {
-		var point = turf.point([data.results[0].latlng.lng, data.results[0].latlng.lat]);
-		var isEligible = false;
-		var result = 'Not Eligible';
-		for (let idx in xcel.features) {
-			if (turf.booleanPointInPolygon(point, xcel.features[idx]) === true) {
-				var isEligible = true;
+			var point = turf.point([data.results[0].latlng.lng, data.results[0].latlng.lat]);
+			var isEligible = false;
+			var result = 'Not Eligible';
+			for (let idx in xcel.features) {
+				if (turf.booleanPointInPolygon(point, xcel.features[idx]) === true) {
+					var isEligible = true;
+				}
 			}
-		}
-		if (isEligible === true) {
-			var result = 'Eligible';
-			var selected_points_locations = [];
-			var name_SQL = "(";
-			for (let idx in mn_counties.features) {
-				if (turf.booleanPointInPolygon(point, mn_counties.features[idx]) === true) {
-					var buffered = turf.buffer(mn_counties.features[idx], 500, {units: 'feet'});
-					for (let idx in mn_counties.features) {
-						if (turf.booleanDisjoint(buffered, mn_counties.features[idx]) === false) {
-							for (let item in points._layers) {
-								point = turf.point(points._layers[item].feature.geometry.coordinates);
-								if (turf.booleanPointInPolygon(point, mn_counties.features[idx]) === true) {
-									console.log(points._layers[item].feature.properties.name)
-									selected_points_locations.push(points._layers[item].feature.properties.name)
-									add_name = "'" + points._layers[item].feature.properties.name + "',";
-									name_SQL += add_name;
+			
+			if (isEligible === true) {
+				var result = 'Eligible';
+				var selected_points_locations = [];
+				var selected_points_latlng = [];
+				var name_SQL = "(";
+				for (let idx in mn_counties.features) {
+					if (turf.booleanPointInPolygon(point, mn_counties.features[idx]) === true) {
+						var buffered = turf.buffer(mn_counties.features[idx], 500, {units: 'feet'});
+						for (let idx in mn_counties.features) {
+							if (turf.booleanDisjoint(buffered, mn_counties.features[idx]) === false) {
+								for (let item in points._layers) {
+									point = turf.point(points._layers[item].feature.geometry.coordinates);
+									if (turf.booleanPointInPolygon(point, mn_counties.features[idx]) === true) {
+										selected_points_locations.push(points._layers[item].feature.properties.name)
+										selected_points_latlng.push(points._layers[item].feature.geometry.coordinates)
+										add_name = "'" + points._layers[item].feature.properties.name + "',";
+										name_SQL += add_name;
+									}
 								}
 							}
 						}
 					}
 				}
-			}
 
-			name_SQL = name_SQL.slice(0,-1);
-			name_SQL = name_SQL + ")";
-		
-			var points_eligible = L.esri.featureLayer({
-				where: "name IN " + name_SQL,
-				url: 'https://services9.arcgis.com/YEQ7YfprtcM3j3JL/arcgis/rest/services/solar_projects_view/FeatureServer/0',
-				pointToLayer: function (geojson, latlng) {
-					return L.marker(latlng, {
-						icon: point_icon
-					});
-				},
-				onEachFeature: function(feature, layer) {
-					layer.bindPopup(feature.properties.name);
-				}
-			});
-		
-			points_eligible.addTo(map);
-		}			
-		
-		var popup = L.popup()
-			.setLatLng(data.results[0].latlng)
-			.setContent("<div class=\"symbPop\">" + data.results[0].text + '<BR><BR><BR>' + result + "</div>")
-			.openOn(map);
-		map.setView(data.results[0].latlng)
+				name_SQL = name_SQL.slice(0,-1);
+				name_SQL = name_SQL + ")";
+
+				var points_eligible = L.esri.featureLayer({
+					where: "name IN " + name_SQL,
+					url: 'https://services9.arcgis.com/YEQ7YfprtcM3j3JL/arcgis/rest/services/projects_view/FeatureServer/0',
+					pointToLayer: function (geojson, latlng) {
+						if (geojson.properties.subscription_status == 0) {
+							return L.marker(latlng, {
+								icon: point_icon_grey
+							});
+						} else {
+							return L.marker(latlng, {
+								icon: point_icon
+							});
+						}
+					},
+					onEachFeature: function(feature, layer) {
+						layer.bindPopup(feature.properties.name);
+					}
+				});
+				
+				points_eligible.addTo(map);
+				results_id = String(points_eligible._leaflet_id);
+				points.query().bounds(function (error, latlngbounds) {
+					map.fitBounds(latlngbounds);
+				});
+				
+				var popup = L.popup()
+					.setLatLng(data.results[0].latlng)
+					.setContent("<div class=\"symbPop\">" + data.results[0].text + '<BR><BR><BR>' + result + "</div>")
+					.openOn(map);
+
+			}	else {
+				var popup = L.popup()
+					.setLatLng(data.results[0].latlng)
+					.setContent("<div class=\"symbPop\">" + data.results[0].text + '<BR><BR><BR>' + result + "</div>")
+					.openOn(map);
+				map.setView(data.results[0].latlng);
+			}		
 		}
 		$("#loading").removeClass('loadingOn');
 		$("#loading").addClass('loadingHidden');
@@ -231,13 +272,41 @@ searchControl.on('results', function(data){
 
 
 		$('#operating-btn').click(function () {
+				// workaround to remove results layer
+			  map.eachLayer(function (layer) {
+						if (String(layer._leaflet_id) == results_id) {
+							map.removeLayer(layer);
+						}
+				});
+
+			
 				$('#operating-btn').toggleClass('btn-info');
 				$('#operating-btn').toggleClass('btn-secondary');
+			
+	
+				if (map.hasLayer(points_operating)) {
+					map.removeLayer(points_operating);
+				} else {
+					points_operating.addTo(map);
+				}
 			});
 
 		$('#future-btn').click(function () {
+				// workaround to remove results layer
+			  map.eachLayer(function (layer) {
+						if (String(layer._leaflet_id) == results_id) {
+							map.removeLayer(layer);
+						}
+				});			
+			
 				$('#future-btn').toggleClass('btn-info');
 				$('#future-btn').toggleClass('btn-secondary');
+			 	
+				if (map.hasLayer(points_future)) {
+					map.removeLayer(points_future);
+				} else {
+					points_future.addTo(map);
+				}
 			});
 
 
@@ -259,7 +328,5 @@ searchControl.on('results', function(data){
 						$("#geocode").append(geocoder);
 				}
 				attachSearch();
-
-
 });
 
