@@ -181,11 +181,13 @@ searchControl.on('results', function(data){
 			var point = turf.point([data.results[0].latlng.lng, data.results[0].latlng.lat]);
 			var isEligible = false;
 			var result = 'Not Eligible';
+			var subStatus = false;
 			for (let idx in xcel.features) {
 				if (turf.booleanPointInPolygon(point, xcel.features[idx]) === true) {
 					var isEligible = true;
 				}
 			}
+			
 			
 			if (isEligible === true) {
 				var result = 'Eligible';
@@ -200,6 +202,9 @@ searchControl.on('results', function(data){
 								for (let item in points._layers) {
 									point = turf.point(points._layers[item].feature.geometry.coordinates);
 									if (turf.booleanPointInPolygon(point, mn_counties.features[idx]) === true) {
+										if (points._layers[item].feature.properties.subscription_status === 1) {
+											subStatus = true;
+										}
 										selected_points_locations.push(points._layers[item].feature.properties.name)
 										selected_points_latlng.push(points._layers[item].feature.geometry.coordinates)
 										add_name = "'" + points._layers[item].feature.properties.name + "',";
@@ -229,7 +234,8 @@ searchControl.on('results', function(data){
 						}
 					},
 					onEachFeature: function(feature, layer) {
-						layer.bindPopup(feature.properties.name);
+						imageLink = "img/" + feature.properties.name.toLowerCase().replace(/ /g, "").replace("solar", "").replace(".", "").replace("uss", "") + ".jpg"
+        		layer.bindPopup("<span class=\"popup-title\">" + feature.properties.name + "</span>" + "<br><br><img src=" + imageLink + ">", {minWidth: 300});
 					}
 				});
 				
@@ -238,19 +244,27 @@ searchControl.on('results', function(data){
 				points.query().bounds(function (error, latlngbounds) {
 					map.fitBounds(latlngbounds);
 				});
-				
-				var popup = L.popup()
-					.setLatLng(data.results[0].latlng)
-					.setContent("<div class=\"symbPop\">" + data.results[0].text + '<BR><BR><BR>' + result + "</div>")
-					.openOn(map);
+			}
+			if (isEligible === true) { // eligible and has projects open to subscription
+				if (subStatus === true) {
+					var popup = L.popup()
+						.setLatLng(data.results[0].latlng)
+						.setContent(data.results[0].text + '<BR><BR><BR>' + 'You\'re potentially eligible to subscribe to one of the projects shown on the map!')
+						.openOn(map);
+				} else { // eligible but no projects or no projects open to subscription
+					var popup = L.popup()
+						.setLatLng(data.results[0].latlng)
+						.setContent(data.results[0].text + '<BR><BR><BR>' + 'All projects in your area are currently filled but you may be eligible to subscribe in the future.')
+						.openOn(map);
+				}
+			} else { // not eligible, not in xcel territory
+					var popup = L.popup()
+						.setLatLng(data.results[0].latlng)
+						.setContent(data.results[0].text + '<BR><BR><BR>' + 'Unfortunately, this address does not appear to be in Xcel Energy territory. Only Xcel Energy customers are eligible to subscribe to US Solar.')
+						.openOn(map);
+			}
 
-			}	else {
-				var popup = L.popup()
-					.setLatLng(data.results[0].latlng)
-					.setContent("<div class=\"symbPop\">" + data.results[0].text + '<BR><BR><BR>' + result + "</div>")
-					.openOn(map);
-				map.setView(data.results[0].latlng);
-			}		
+
 		}
 		$("#loading").removeClass('loadingOn');
 		$("#loading").addClass('loadingHidden');
