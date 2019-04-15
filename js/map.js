@@ -104,7 +104,7 @@ var points_operating = L.esri.featureLayer({
 						layer.bindPopup(feature.properties.name);
 						if (feature.properties.operating_status == 1) {
 							imageLink = "img/" + feature.properties.name.toLowerCase().replace(/ /g, "").replace("solar", "").replace(".", "").replace("uss", "") + ".jpg"
-        			layer.bindPopup("<span class=\"popup-title\">" + feature.properties.name + "</span>" + "<br><br><img src=" + imageLink + ">", {minWidth: 300});
+        			layer.bindPopup("<span class=\"popup-title\">" + feature.properties.name + "</span>" + "<br><br><img src=" + imageLink + ">" + "<br><br>" + feature.properties.county + " County  |  In-Operation", {minWidth: 300});
 						} else {
 							layer.bindPopup(feature.properties.name);
 						}
@@ -123,7 +123,7 @@ var points_future = L.esri.featureLayer({
 						layer.bindPopup(feature.properties.name);
 						if (feature.properties.operating_status == 0) {
 							imageLink = "img/" + feature.properties.name.toLowerCase().replace(/ /g, "").replace("solar", "").replace(".", "").replace("uss", "") + ".jpg"
-        			layer.bindPopup("<span class=\"popup-title\">" + feature.properties.name + "</span>" + "<br><br><img src=" + imageLink + ">", {minWidth: 300});
+        			layer.bindPopup("<span class=\"popup-title\">" + feature.properties.name + "</span>" + "<br><br><img src=" + imageLink + ">" + "<br><br>" + feature.properties.county + " County  |  In-Construction", {minWidth: 300});
 						} else {
 							layer.bindPopup(feature.properties.name);
 						}
@@ -170,6 +170,7 @@ searchControl.on('results', function(data){
 	$('#operating-btn').addClass('btn-secondary');
 	$('#future-btn').removeClass('btn-info');
 	$('#future-btn').addClass('btn-secondary');
+	$("#panelSearch").removeClass('in');
 
 	map.eachLayer(function (layer) {  //remove all layers and add basemap back.  This isn't ideal but map.hasLayer is behaving unexpectedly here.
   	map.removeLayer(layer);
@@ -235,7 +236,8 @@ searchControl.on('results', function(data){
 					},
 					onEachFeature: function(feature, layer) {
 						imageLink = "img/" + feature.properties.name.toLowerCase().replace(/ /g, "").replace("solar", "").replace(".", "").replace("uss", "") + ".jpg"
-        		layer.bindPopup("<span class=\"popup-title\">" + feature.properties.name + "</span>" + "<br><br><img src=" + imageLink + ">", {minWidth: 300});
+        		layer.bindPopup("<span class=\"popup-title\">" + feature.properties.name + "</span>" + "<br><br><img src=" + imageLink + ">" + "<BR><BR>" + 
+														"<a href=\"https://www.us-solar.com/contact.html\" target=\"_blank\">" + "<span class=\"popup-contact\">Contact US Solar</span>" + "</a>", {minWidth: 300});
 					}
 				});
 				
@@ -249,12 +251,18 @@ searchControl.on('results', function(data){
 				if (subStatus === true) {
 					var popup = L.popup()
 						.setLatLng(data.results[0].latlng)
-						.setContent(data.results[0].text + '<BR><BR><BR>' + 'You\'re potentially eligible to subscribe to one of the projects shown on the map!')
+						.setContent(data.results[0].text + '<BR><BR><BR>' + '<span class=\'address-result\'>' + 'You\'re eligible!' + "</span>" + '<br><br>' + 
+												'Check out the map to see which projects are available in your area.' + '<BR><BR>' + '<img src=\'img/icon.svg\' height=\'30\' width=\'30\'>' + '  Projects accepting subscribers'
+											 + '<BR>' + '<img src=\'img/icon-greyed.svg\' height=\'30\' width=\'30\'>' + '  Projects already filled' + "<BR><BR>" + 
+														"<a href=\"https://www.us-solar.com/mn-signup.html\" target=\"_blank\">" + "<span class=\"popup-contact\">Contact US Solar to subscribe today!</span>" + "</a>")
 						.openOn(map);
 				} else { // eligible but no projects or no projects open to subscription
 					var popup = L.popup()
 						.setLatLng(data.results[0].latlng)
-						.setContent(data.results[0].text + '<BR><BR><BR>' + 'All projects in your area are currently filled but you may be eligible to subscribe in the future.')
+						.setContent(data.results[0].text + '<BR><BR><BR>' + 'All projects in your area are currently filled but you may be eligible to subscribe in the future.' + 
+												'<BR><BR>' + '<img src=\'img/icon.svg\' height=\'30\' width=\'30\'>' + '  Projects accepting subscribers'
+											 + '<BR>' + '<img src=\'img/icon-greyed.svg\' height=\'30\' width=\'30\'>' + '  Projects already filled' + "<BR><BR>" + 
+														"<a href=\"https://www.us-solar.com/contact.html\" target=\"_blank\">" + "<span class=\"popup-contact\">Contact US Solar to join our waitlist!</span>" + "</a>")
 						.openOn(map);
 				}
 			} else { // not eligible, not in xcel territory
